@@ -11,7 +11,7 @@ export class HealthController implements Controller {
     this.router.get('/', this.health);
   }
 
-  private health = async (_req: Request, res: Response) => {
+  private health = async (req: Request, res: Response) => {
     const isHealthy = await this.healthCheckRepo.checkHealth();
     exampleSchema.parse({ id: '1', name: 'test' });
 
@@ -21,6 +21,7 @@ export class HealthController implements Controller {
         service: 'up',
         db: isHealthy ? 'ok' : 'error',
       },
+      meta: { requestId: req.requestId, timestamp: new Date().toISOString() },
     });
   };
 }
