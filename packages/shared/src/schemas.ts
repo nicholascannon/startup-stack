@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Shared Zod schemas
+// TODO: test schema - remove
 export const exampleSchema = z.object({
   id: z.string(),
   name: z.string(),

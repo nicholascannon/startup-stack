@@ -13,6 +13,8 @@ export class HealthController implements Controller {
 
   private health = async (req: Request, res: Response) => {
     const isHealthy = await this.healthCheckRepo.checkHealth();
+
+    // TODO: example usage - remove
     exampleSchema.parse({ id: '1', name: 'test' });
 
     return res.json({
