@@ -13,9 +13,6 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "baseUrl": ".",
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
