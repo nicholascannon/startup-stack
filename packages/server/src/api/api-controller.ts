@@ -23,6 +23,7 @@ export class ApiController implements Controller {
     this.router = Router();
 
     this.router.use(express.json({ limit: '100kb', strict: true }));
+    this.router.use(express.urlencoded({ extended: true, limit: '100kb' }));
     this.router.use(cors({ origin: config.cors.hosts }));
 
     this.router.use(
