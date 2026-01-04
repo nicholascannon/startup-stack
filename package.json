@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace=@startup-stack/shared && npm run build --workspaces --if-present",
+    "build": "npm run build --workspace=@startup-stack/shared && npm run build --workspace=@startup-stack/frontend && npm run build --workspace=@startup-stack/server",
     "test": "npm run test --workspaces --if-present -- --watch=false",
     "dev": "concurrently -n \"shared,server,frontend\" -c \"yellow,blue,green\" \"npm run dev --workspace=@startup-stack/shared\" \"npm run dev --workspace=@startup-stack/server\" \"npm run dev --workspace=@startup-stack/frontend\"",
     "lint": "biome check .",
