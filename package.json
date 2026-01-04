@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npm run build --workspace=@startup-stack/shared && npm run build --workspaces --if-present",
     "test": "npm run test --workspaces --if-present -- --watch=false",
-    "dev": "concurrently -n \"server,frontend\" -c \"blue,green\" \"npm run dev --workspace=@startup-stack/server\" \"npm run dev --workspace=@startup-stack/frontend\"",
+    "dev": "concurrently -n \"shared,server,frontend\" -c \"yellow,blue,green\" \"npm run dev --workspace=@startup-stack/shared\" \"npm run dev --workspace=@startup-stack/server\" \"npm run dev --workspace=@startup-stack/frontend\"",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "typecheck": "npm run typecheck --workspaces --if-present"
