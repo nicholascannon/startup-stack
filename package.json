@@ -11,7 +11,10 @@
     "dev": "concurrently -n \"shared,server,frontend\" -c \"yellow,blue,green\" \"npm run dev --workspace=@startup-stack/shared\" \"npm run dev --workspace=@startup-stack/server\" \"npm run dev --workspace=@startup-stack/frontend\"",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "frontend": "npm run --workspace=@startup-stack/frontend --",
+    "server": "npm run --workspace=@startup-stack/server --",
+    "shared": "npm run --workspace=@startup-stack/shared --"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.10",
