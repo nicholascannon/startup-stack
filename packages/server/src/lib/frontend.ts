@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import express, { type Application } from 'express';
+import express, { type Application, type NextFunction, type Request, type Response } from 'express';
 import { LOGGER } from './logger.js';
 
 /**
@@ -10,13 +10,25 @@ export function serveFrontend(app: Application, bundlePath: string) {
 
   app.use(express.static(bundlePath));
 
-  app.get('*', (req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    // Skip if not a GET request or if it's an API route
+    if (req.method !== 'GET' || req.path.startsWith('/api')) {
+      return next();
+    }
+
     // Return 404 for any file request (static middleware will handle it)
     if (req.path.includes('.')) {
       return res.status(404).json({
-        message: 'Resource not found',
-        path: req.originalUrl,
-        method: req.method,
+        success: false,
+        error: {
+          code: 'RESOURCE_NOT_FOUND',
+          message: 'Resource not found',
+          details: {
+            path: req.originalUrl,
+            method: req.method,
+          },
+        },
+        meta: { requestId: req.requestId, timestamp: new Date().toISOString() },
       });
     }
 

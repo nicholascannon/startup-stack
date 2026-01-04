@@ -1,11 +1,17 @@
-import type { ErrorRequestHandler } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 
-export const zodErrorHandler: ErrorRequestHandler = (err, _req, res, next) => {
+// biome-ignore lint/suspicious/noExplicitAny: required to match express error handler type
+export const zodErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   if (!(err instanceof ZodError)) return next(err);
 
   return res.status(400).json({
-    message: 'Invalid request',
-    issues: err.issues,
+    success: false,
+    error: {
+      code: 'INVALID_REQUEST',
+      message: 'Invalid request',
+      details: err.flatten().fieldErrors,
+    },
+    meta: { requestId: req.requestId, timestamp: new Date().toISOString() },
   });
 };

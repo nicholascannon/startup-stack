@@ -9,7 +9,9 @@ describe('zodErrorHandler middleware', () => {
   let next: any;
 
   beforeEach(() => {
-    req = {};
+    req = {
+      requestId: 'test-request-id',
+    };
     res = {
       status: vi.fn().mockReturnThis(),
       json: vi.fn(),
@@ -31,10 +33,20 @@ describe('zodErrorHandler middleware', () => {
     zodErrorHandler(zodError, req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      message: 'Invalid request',
-      issues: zodError.issues,
-    });
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        success: false,
+        error: expect.objectContaining({
+          code: 'INVALID_REQUEST',
+          message: 'Invalid request',
+          details: expect.any(Object),
+        }),
+        meta: expect.objectContaining({
+          requestId: 'test-request-id',
+          timestamp: expect.any(String),
+        }),
+      })
+    );
     expect(next).not.toHaveBeenCalled();
   });
 

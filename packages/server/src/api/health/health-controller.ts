@@ -14,6 +14,13 @@ export class HealthController implements Controller {
   private health = async (_req: Request, res: Response) => {
     const isHealthy = await this.healthCheckRepo.checkHealth();
     exampleSchema.parse({ id: '1', name: 'test' });
-    return res.json({ service: 'up', db: isHealthy ? 'ok' : 'error' });
+
+    return res.json({
+      success: true,
+      data: {
+        service: 'up',
+        db: isHealthy ? 'ok' : 'error',
+      },
+    });
   };
 }

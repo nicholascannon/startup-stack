@@ -61,9 +61,16 @@ export class ApiController implements Controller {
 
   private notFoundHandler = (req: Request, res: Response) => {
     return res.status(404).json({
-      message: 'Resource not found',
-      path: req.originalUrl,
-      method: req.method,
+      success: false,
+      error: {
+        code: 'NOT_FOUND',
+        message: 'Resource not found',
+        details: {
+          path: req.originalUrl,
+          method: req.method,
+        },
+      },
+      meta: { requestId: req.requestId, timestamp: new Date().toISOString() },
     });
   };
 }

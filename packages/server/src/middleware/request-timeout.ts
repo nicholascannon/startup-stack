@@ -13,8 +13,16 @@ export function requestTimeoutMiddleware(timeout: number) {
         });
 
         res.status(408).json({
-          message: 'Request timeout',
-          requestId: req.requestId,
+          success: false,
+          error: {
+            code: 'REQUEST_TIMEOUT',
+            message: 'Request timeout',
+            details: {
+              path: req.path,
+              method: req.method,
+            },
+          },
+          meta: { requestId: req.requestId, timestamp: new Date().toISOString() },
         });
 
         // Destroy the request to free up resources
