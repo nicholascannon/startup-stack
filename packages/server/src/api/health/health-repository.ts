@@ -1,3 +1,3 @@
 export interface HealthRepository {
-	checkHealth(): Promise<boolean>;
+  checkHealth(): Promise<boolean>;
 }
