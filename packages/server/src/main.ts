@@ -12,6 +12,7 @@ LOGGER.info('CONFIG', {
     env: CONFIG.env,
     port: CONFIG.port,
     cors: CONFIG.cors,
+    rateLimit: CONFIG.rateLimit,
     requestTimeout: CONFIG.requestTimeout,
   },
 });
