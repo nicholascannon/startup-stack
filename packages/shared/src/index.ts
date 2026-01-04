@@ -1,3 +1,2 @@
+export * from './api/health.js';
 export * from './api-response.js';
-export * from './schemas.js';
-export * from './types.js';

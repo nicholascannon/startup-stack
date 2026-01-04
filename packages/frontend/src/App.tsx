@@ -1,16 +1,16 @@
+import type { HealthResponse } from '@startup-stack/shared';
 import { useEffect, useState } from 'react';
+
 import './App.css';
-import { exampleSchema } from '@startup-stack/shared';
 
 function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    exampleSchema.parse({ id: '1', name: 'test' });
-
+    // TODO: test api response - remove
     fetch('/api/v1/health')
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: HealthResponse) => {
         console.log(data);
       });
   }, []);

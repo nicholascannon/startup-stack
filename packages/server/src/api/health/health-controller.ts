@@ -1,4 +1,4 @@
-import { exampleSchema } from '@startup-stack/shared';
+import type { HealthResponse } from '@startup-stack/shared';
 import { type Request, type Response, Router } from 'express';
 import type { Controller } from '../../lib/controller.js';
 import type { HealthRepository } from './health-repository.js';
@@ -14,16 +14,16 @@ export class HealthController implements Controller {
   private health = async (req: Request, res: Response) => {
     const isHealthy = await this.healthCheckRepo.checkHealth();
 
-    // TODO: example usage - remove
-    exampleSchema.parse({ id: '1', name: 'test' });
-
-    return res.json({
+    return res.json<HealthResponse>({
       success: true,
       data: {
         service: 'up',
         db: isHealthy ? 'ok' : 'error',
       },
-      meta: { requestId: req.requestId, timestamp: new Date().toISOString() },
+      meta: {
+        requestId: req.requestId,
+        timestamp: new Date().toISOString(),
+      },
     });
   };
 }
