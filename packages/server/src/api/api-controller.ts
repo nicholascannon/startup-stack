@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import cors from 'cors';
+import express, { type Request, type Response, Router } from 'express';
 import expressRateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import type { Config } from '../config/env.js';
 import type { Controller } from '../lib/controller.js';
@@ -16,30 +17,28 @@ export type ApiDependencies = {
 export class ApiController implements Controller {
   public readonly router: Router;
 
-  constructor({ healthRepository }: ApiDependencies, rateLimitConfig: Config['rateLimit']) {
+  constructor({ healthRepository }: ApiDependencies, config: Config) {
     const healthController = new HealthController(healthRepository);
 
     this.router = Router();
 
+    this.router.use(express.json({ limit: '100kb', strict: true }));
+    this.router.use(cors({ origin: config.cors.hosts }));
+
     this.router.use(
       '/v1/health',
       this.rateLimiter({
-        ...rateLimitConfig,
-        max: rateLimitConfig.max * 3, // 3x the max for health check
+        ...config.rateLimit,
+        max: config.rateLimit.max * 3, // 3x the max for health check
       }),
       healthController.router
     );
 
-    this.router.use(this.rateLimiter(rateLimitConfig));
+    this.router.use(this.rateLimiter(config.rateLimit));
 
-    this.router.use((req, res) => {
-      return res.status(404).json({
-        message: 'Resource not found',
-        path: req.originalUrl,
-        method: req.method,
-      });
-    });
+    /* API ROUTES HERE */
 
+    this.router.use(this.notFoundHandler);
     this.router.use(zodErrorHandler);
   }
 
@@ -58,4 +57,12 @@ export class ApiController implements Controller {
         error: 'Too many requests from this IP, please try again later.',
       },
     });
+
+  private notFoundHandler = (req: Request, res: Response) => {
+    return res.status(404).json({
+      message: 'Resource not found',
+      path: req.originalUrl,
+      method: req.method,
+    });
+  };
 }

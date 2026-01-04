@@ -1,5 +1,4 @@
 import { join } from 'node:path';
-import cors from 'cors';
 import type { Application } from 'express';
 import express from 'express';
 import helmet from 'helmet';
@@ -20,30 +19,17 @@ export function createApp({
 }): Application {
   const app = express();
 
-  if (CONFIG.env === 'production') {
-    app.set('trust proxy', 1);
-  }
+  app.set('trust proxy', 1);
   app.use(helmet());
   app.use(requestIdMiddleware);
   if (CONFIG.requestTimeout > 0) {
     app.use(requestTimeoutMiddleware(CONFIG.requestTimeout));
   }
-  app.use(
-    cors({
-      origin: CONFIG.cors.hosts,
-    })
-  );
   if (enableLogging) {
     app.use(loggingMiddleware);
   }
-  app.use(
-    express.json({
-      limit: '100kb',
-      strict: true,
-    })
-  );
 
-  const api = new ApiController(apiDependencies, CONFIG.rateLimit);
+  const api = new ApiController(apiDependencies, CONFIG);
   app.use('/api', api.router);
 
   if (CONFIG.env === 'production') {
