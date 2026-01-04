@@ -10,7 +10,8 @@ export function serveFrontend(app: Application, bundlePath: string) {
 
   app.use(express.static(bundlePath));
 
-  app.get('*', (req, res) => {
+  app.get('*', (req, res, next) => {
+    // Return 404 for any file request (static middleware will handle it)
     if (req.path.includes('.')) {
       return res.status(404).json({
         message: 'Resource not found',
@@ -22,9 +23,9 @@ export function serveFrontend(app: Application, bundlePath: string) {
     return res.sendFile(join(bundlePath, 'index.html'), (error) => {
       if (error) {
         LOGGER.error('Error sending frontend index.html', { error });
-        res.status(500).json({
-          message: 'Internal server error',
-        });
+        if (!res.headersSent) {
+          next(error);
+        }
       }
     });
   });
