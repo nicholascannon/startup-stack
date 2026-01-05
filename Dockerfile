@@ -23,6 +23,7 @@ COPY vite.config.ts* ./packages/frontend/
 COPY vitest.config.ts* ./
 COPY biome.json ./
 
+RUN npm run lint
 RUN npm run build
 RUN npm test
 
