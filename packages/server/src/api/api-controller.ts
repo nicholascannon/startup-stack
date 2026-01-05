@@ -17,7 +17,9 @@ export type ApiDependencies = {
 export class ApiController implements Controller {
   public readonly router: Router;
 
-  constructor({ healthRepository }: ApiDependencies, config: Config) {
+  constructor(dependencies: ApiDependencies, config: Config) {
+    const { healthRepository } = dependencies;
+
     const healthController = new HealthController(healthRepository);
 
     this.router = Router();
