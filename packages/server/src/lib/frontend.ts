@@ -3,10 +3,12 @@ import express, { type Application, type NextFunction, type Request, type Respon
 import { LOGGER } from './logger.js';
 
 /**
- * Serves the frontend application.
+ * Statically serves the frontend application at bundlePath.
  */
 export function serveFrontend(app: Application, bundlePath: string) {
   LOGGER.info('Serving frontend bundle', { bundlePath });
+
+  const indexHtml = join(bundlePath, 'index.html');
 
   app.use(express.static(bundlePath));
 
@@ -32,7 +34,7 @@ export function serveFrontend(app: Application, bundlePath: string) {
       });
     }
 
-    return res.sendFile(join(bundlePath, 'index.html'), (error) => {
+    return res.sendFile(indexHtml, (error) => {
       if (error) {
         LOGGER.error('Error sending frontend index.html', { error });
         if (!res.headersSent) {
