@@ -36,7 +36,7 @@ export function serveFrontend(app: Application, bundlePath: string) {
 
     return res.sendFile(indexHtml, (error) => {
       if (error) {
-        LOGGER.error('Error sending frontend index.html', { error });
+        LOGGER.error('Error sending frontend index.html', { error, indexHtml, bundlePath });
         if (!res.headersSent) {
           next(error);
         }
