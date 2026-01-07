@@ -8,7 +8,7 @@ export default mergeConfig(
       globals: true,
       environment: 'jsdom',
       clearMocks: true,
-      setupFiles: './src/config/test/setup.ts',
+      setupFiles: './src/config/testing.ts',
     },
   })
 );
