@@ -13,7 +13,7 @@ primary_region = 'syd'
 [deploy]
   # Release command runs migrations or other pre-deployment tasks
   # release_command = "npm run migrate"
-  strategy = "rolling"
+  strategy = "bluegreen"
 
 [http_service]
   internal_port = 8080
@@ -37,7 +37,7 @@ primary_region = 'syd'
   NODE_ENV = "production"
 
 [[vm]]
-  memory = "1gb"
+  memory = "512mb"
   cpu_kind = "shared"
   cpus = 1
 
