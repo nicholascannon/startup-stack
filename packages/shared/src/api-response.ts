@@ -1,18 +1,20 @@
-export type ApiResponse<TData, TError> =
+export type ApiResponse<TData, TErrorCode extends string, TErrorDetails = unknown> =
   | {
+      // Error response
       success: false;
+      data?: TData;
       error: {
-        code: string;
+        code: TErrorCode;
         message: string;
-        details?: TError;
+        details?: TErrorDetails;
       };
-      // required for errors
       meta: {
         requestId: string;
         timestamp: string;
       };
     }
   | {
+      // Success response
       success: true;
       data: TData;
       meta?: {

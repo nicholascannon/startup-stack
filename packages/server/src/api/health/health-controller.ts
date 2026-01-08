@@ -1,4 +1,4 @@
-import type { HealthResponse } from '@startup-stack/shared';
+import type { HealthLivenessResponse, HealthReadinessResponse } from '@startup-stack/shared';
 import { type Request, type Response, Router } from 'express';
 import type { Controller } from '../../lib/controller.js';
 import type { HealthRepository } from './health-repository.js';
@@ -8,22 +8,59 @@ export class HealthController implements Controller {
 
   constructor(private readonly healthCheckRepo: HealthRepository) {
     this.router = Router();
-    this.router.get('/', this.health);
+    this.router.get('/', this.liveness);
+    this.router.get('/ready', this.readiness);
   }
 
-  private health = async (req: Request, res: Response) => {
-    const isHealthy = await this.healthCheckRepo.checkHealth();
-
-    return res.json<HealthResponse>({
+  /**
+   * Always returns 200 if app is running.
+   */
+  private liveness = async (req: Request, res: Response) => {
+    return res.status(200).json<HealthLivenessResponse>({
       success: true,
       data: {
-        service: 'up',
-        db: isHealthy ? 'ok' : 'error',
+        message: 'ok',
       },
       meta: {
         requestId: req.requestId,
         timestamp: new Date().toISOString(),
       },
     });
+  };
+
+  /**
+   * Returns 200 if dependencies are healthy, 503 if not.
+   */
+  private readiness = async (req: Request, res: Response) => {
+    const { isHealthy, db } = await this.healthCheckRepo.checkHealth();
+
+    const statusCode = isHealthy ? 200 : 503;
+    return res.status(statusCode).json<HealthReadinessResponse>(
+      isHealthy
+        ? {
+            success: true,
+            data: {
+              db: 'ok',
+            },
+            meta: {
+              requestId: req.requestId,
+              timestamp: new Date().toISOString(),
+            },
+          }
+        : {
+            success: false,
+            data: {
+              db: db?.message || 'ok',
+            },
+            error: {
+              code: 'HEALTH_READINESS_CHECK_FAILED',
+              message: 'Health readiness check failed',
+            },
+            meta: {
+              requestId: req.requestId,
+              timestamp: new Date().toISOString(),
+            },
+          }
+    );
   };
 }

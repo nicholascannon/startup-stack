@@ -1,4 +1,4 @@
-import type { HealthResponse } from '@startup-stack/shared';
+import type { HealthReadinessResponse } from '@startup-stack/shared';
 import { useEffect, useState } from 'react';
 
 import './App.css';
@@ -8,9 +8,9 @@ function App() {
 
   useEffect(() => {
     // TODO: test api response - remove
-    fetch('/api/v1/health')
+    fetch('/api/v1/health/ready')
       .then((res) => res.json())
-      .then((data: HealthResponse) => {
+      .then((data: HealthReadinessResponse) => {
         console.log(data);
       });
   }, []);
