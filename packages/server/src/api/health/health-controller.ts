@@ -1,5 +1,6 @@
 import type { HealthLivenessResponse, HealthReadinessResponse } from '@startup-stack/shared';
 import { type Request, type Response, Router } from 'express';
+import { CONFIG } from '../../config/env.js';
 import type { Controller } from '../../lib/controller.js';
 import type { HealthRepository } from './health-repository.js';
 
@@ -19,6 +20,7 @@ export class HealthController implements Controller {
     return res.status(200).json<HealthLivenessResponse>({
       success: true,
       data: {
+        version: CONFIG.release,
         message: 'ok',
       },
       meta: {
@@ -40,6 +42,7 @@ export class HealthController implements Controller {
         ? {
             success: true,
             data: {
+              version: CONFIG.release,
               db: 'ok',
             },
             meta: {
@@ -50,6 +53,7 @@ export class HealthController implements Controller {
         : {
             success: false,
             data: {
+              version: CONFIG.release,
               db: db?.message || 'ok',
             },
             error: {

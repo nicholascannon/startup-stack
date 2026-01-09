@@ -35,6 +35,7 @@ primary_region = 'syd'
 [env]
   PORT = "8080"
   NODE_ENV = "production"
+  RELEASE = "1.0.0" # TODO: update via deploy pipeline
 
 [[vm]]
   memory = "512mb"

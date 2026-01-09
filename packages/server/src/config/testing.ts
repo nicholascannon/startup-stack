@@ -7,6 +7,7 @@ beforeEach(() => {
 
 const testConfig: Config = {
   port: 8000,
+  release: 'test',
   env: 'test',
   cors: {
     hosts: [],
@@ -16,6 +17,11 @@ const testConfig: Config = {
     max: 100,
   },
   requestTimeout: 30_000,
+  sentry: {
+    dsn: undefined,
+    environment: 'local',
+    sampleRate: 1.0,
+  },
 };
 
 vi.mock('../config/env.js', () => ({

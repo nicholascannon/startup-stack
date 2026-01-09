@@ -8,6 +8,8 @@ vi.mock('../lib/frontend', () => ({
 vi.mock('../config/env.js', () => ({
   CONFIG: {
     env: 'production',
+    release: 'test',
+    port: 8000,
     cors: {
       hosts: [],
     },
@@ -16,6 +18,11 @@ vi.mock('../config/env.js', () => ({
       max: 100,
     },
     requestTimeout: 30_000,
+    sentry: {
+      dsn: undefined,
+      environment: 'local',
+      sampleRate: 1.0,
+    },
   },
 }));
 

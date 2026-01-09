@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import * as Sentry from '@sentry/node';
 import type { Application } from 'express';
 import express from 'express';
 import helmet from 'helmet';
@@ -9,6 +10,7 @@ import { loggingMiddleware } from './lib/logger.js';
 import { genericErrorHandler } from './middleware/generic-error-handler.js';
 import { requestIdMiddleware } from './middleware/request-id.js';
 import { requestTimeoutMiddleware } from './middleware/request-timeout.js';
+import { sentryContextMiddleware } from './middleware/sentry-context.js';
 
 export function createApp({
   enableLogging = true,
@@ -22,6 +24,7 @@ export function createApp({
   app.set('trust proxy', 1);
   app.use(helmet());
   app.use(requestIdMiddleware);
+  app.use(sentryContextMiddleware);
   if (CONFIG.requestTimeout > 0) {
     app.use(requestTimeoutMiddleware(CONFIG.requestTimeout));
   }
@@ -37,6 +40,7 @@ export function createApp({
     serveFrontend(app, frontendDist);
   }
 
+  Sentry.setupExpressErrorHandler(app);
   app.use(genericErrorHandler);
 
   return app;
