@@ -54,7 +54,7 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           if [ -n "$SENTRY_DSN" ]; then
-            flyctl secrets set SENTRY_DSN="$SENTRY_DSN" --app startup-stack
+            flyctl secrets set SENTRY_DSN="$SENTRY_DSN" --app startup-stack --stage
           fi
 
       - name: Deploy to Fly.io
