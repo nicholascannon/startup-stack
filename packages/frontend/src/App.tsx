@@ -5,13 +5,14 @@ import './App.css';
 
 function App() {
   const [count, setCount] = useState(0);
+  const [version, setVersion] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     // TODO: test api response - remove
     fetch('/api/v1/health/ready')
       .then((res) => res.json())
       .then((data: HealthReadinessResponse) => {
-        console.log(data);
+        setVersion(data.data?.version);
       });
   }, []);
 
@@ -23,6 +24,7 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
+      <h2>Version: {version ?? 'loading...'}</h2>
       <div className='card'>
         <button onClick={() => setCount((count) => count + 1)} type='button'>
           count is {count}
