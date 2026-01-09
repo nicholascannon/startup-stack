@@ -3,6 +3,20 @@ name: Deploy Pipeline
 on:
   push:
     branches: [main]
+    paths:
+      # Source code (includes all package configs)
+      - 'packages/**'
+      # Docker and deployment config
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'fly.toml'
+      # CI/CD config
+      - '.github/workflows/deploy.yml'
+      # Root-level dependencies and build config
+      - 'package.json'
+      - 'package-lock.json'
+      - 'biome.json'
+      - 'tsconfig.json'
 
 jobs:
   deploy:
