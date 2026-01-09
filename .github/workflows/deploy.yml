@@ -20,18 +20,19 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to Fly.io Docker Registry
-        run: |
-          echo "${{ secrets.FLY_API_TOKEN }}" | docker login registry.fly.io -u "fly" --password-stdin
+      - name: Install flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Authenticate with Fly.io Docker Registry
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: flyctl auth docker
 
       - name: Build Docker image
         run: docker build -t registry.fly.io/startup-stack:${{ steps.commit.outputs.hash }} .
 
       - name: Push Docker image
         run: docker push registry.fly.io/startup-stack:${{ steps.commit.outputs.hash }}
-
-      - name: Install flyctl
-        uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Set SENTRY_DSN secret (if provided)
         env:
