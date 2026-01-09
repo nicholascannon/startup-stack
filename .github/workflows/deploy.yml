@@ -1,0 +1,48 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get commit hash
+        id: commit
+        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Fly.io Docker Registry
+        run: |
+          echo "${{ secrets.FLY_API_TOKEN }}" | docker login registry.fly.io -u "fly" --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t registry.fly.io/startup-stack:${{ steps.commit.outputs.hash }} .
+
+      - name: Push Docker image
+        run: docker push registry.fly.io/startup-stack:${{ steps.commit.outputs.hash }}
+
+      - name: Install flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Set SENTRY_DSN secret (if provided)
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          if [ -n "$SENTRY_DSN" ]; then
+            flyctl secrets set SENTRY_DSN="$SENTRY_DSN" --app startup-stack
+          fi
+
+      - name: Deploy to Fly.io
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: flyctl deploy --image registry.fly.io/startup-stack:${{ steps.commit.outputs.hash }} --env RELEASE=${{ steps.commit.outputs.hash }} --app startup-stack
