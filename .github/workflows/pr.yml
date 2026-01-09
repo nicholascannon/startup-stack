@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  validate:
+  lint-build-test-and-validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
