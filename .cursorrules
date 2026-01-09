@@ -1,0 +1,219 @@
+# Startup Stack Project Rules
+
+## Project Structure
+- Monorepo with packages: `server`, `frontend`, `shared`
+- TypeScript with ESM modules (type: "module" in package.json)
+- Express.js backend, React frontend
+- Biome for linting/formatting
+- Vitest for testing
+
+## Code Style
+
+### TypeScript/JavaScript
+- Use ESM imports with `.js` extensions (even for `.ts` files)
+- Single quotes for strings
+- 2-space indentation
+- Semicolons always
+- Line width: 120 characters
+- Trailing commas (ES5 style)
+- Arrow parentheses: always
+- Use `type` keyword for type-only imports: `import type { ... }`
+- Use `node:` prefix for Node.js built-ins: `import { join } from 'node:path'`
+
+### Formatting
+- Follow Biome configuration (extends from root biome.json)
+- Use biome-ignore comments when necessary: `// biome-ignore lint/...`
+- Organize imports automatically (Biome handles this)
+- Run `npm run lint:fix` from the repo root to automatically run biome formatting fixes
+
+## Backend (Server) Patterns
+
+### Architecture
+- **Controllers**: Implement `Controller` interface with `public readonly router: Router`
+- **Dependency Injection**: Use `ApiDependencies` type for constructor dependencies
+- **Repository Pattern**: Define interfaces for repositories, implement concrete classes
+- **Middleware**: Create reusable middleware functions, export as named exports
+
+### API Response Format
+- Always use `ApiResponse<TData, TErrorCode, TErrorDetails>` from `@startup-stack/shared`
+- Response structure:
+  - Success: `{ success: true, data: TData, meta?: { requestId, timestamp } }`
+  - Error: `{ success: false, data?: TData, error: { code, message, details? }, meta: { requestId, timestamp } }`
+- Always include `meta` with `requestId` (from `req.requestId`) and `timestamp` (ISO string)
+- Use typed responses: `res.status(200).json<TypeResponse>({ ... })`
+
+### Error Handling
+- Use custom error codes (SCREAMING_SNAKE_CASE): `'NOT_FOUND'`, `'INVALID_REQUEST'`, `'REQUEST_TIMEOUT'`, etc.
+- All error responses must include `requestId` and `timestamp` in `meta`
+- Use middleware for error handling: `genericErrorHandler`, `zodErrorHandler`
+- Handle specific error types (e.g., ZodError, entity parse errors)
+
+### Request Handlers
+- Use arrow function syntax for handlers: `private handler = async (req: Request, res: Response) => { ... }`
+- Always access `req.requestId` (set by middleware)
+- Return early with `return res.status(...).json(...)`
+- Use async/await for async operations
+
+### Controllers
+- Class-based controllers implementing `Controller` interface
+- Constructor takes dependencies and config
+- Private methods use arrow function syntax
+- Route handlers are private arrow functions
+- Use `this.router = Router()` in constructor
+- Mount routes with `this.router.use()` or `this.router.get()`, etc.
+
+### Middleware
+- Export as named functions: `export function middlewareName(...)`
+- Middleware signature: `(req: Request, res: Response, next: NextFunction) => void`
+- Use `req.requestId` for logging and context
+- Add JSDoc comments for middleware purpose
+
+### Configuration
+- Use Zod for config validation in `config/env.ts`
+- Export as `CONFIG` constant (parsed and validated)
+- Export `Config` type: `export type Config = typeof CONFIG;`
+- Use environment variables with sensible defaults
+- Transform values as needed (e.g., string to number, comma-separated to array)
+- When changing config (especially when adding required config), make sure you update the mocked test config in the testing setup files and also any other mocked configs in tests
+- Update the docker-compose with config changes when relevant
+
+### Logging
+- Use `LOGGER` from `lib/logger.ts` (Winston instance)
+- Structured logging: `LOGGER.info('message', { key: value })`
+- Include `requestId` in log context when available
+- Use appropriate log levels: `info`, `warn`, `error`
+
+### Testing
+- Use Vitest
+- Use Supertest for API endpoint testing
+- Mock `CONFIG` and dependencies in tests, if the default mocked config is not sufficient (see setup files)
+- Use `beforeEach` to clear mocks
+- Descriptive test descriptions: `describe('Feature', () => { it('should do X', ...) })`
+- Test both success and error cases
+- Verify response structure matches `ApiResponse` format when testing APIs with supertest
+
+### File Organization
+- Controllers: `api/{feature}/{feature}-controller.ts`
+- Repositories: `api/{feature}/repositories/{feature}-{impl}-repo.ts`
+- Middleware: `middleware/{name}.ts`
+- Config: `config/{name}.ts`
+- Lib utilities: `lib/{name}.ts`
+- Types: `types/{name}.d.ts` (for module augmentations)
+
+## Frontend Patterns
+
+### React
+- Use functional components with hooks
+- TypeScript for all components
+- Use shared types from `@startup-stack/shared`
+- Single quotes for JSX attributes
+
+### Testing
+- Use Vitest with Testing Library
+- Test component rendering and interactions
+- Keep tests simple and focused
+
+## Shared Package
+
+### Types
+- Export API response types using `ApiResponse` generic
+- Define types in `api/{feature}.ts`
+- Re-export from `index.ts`
+- Use descriptive type names: `{Feature}{Action}Response`
+
+## General Patterns
+
+### Imports
+- Group imports: Node.js built-ins, external packages, internal modules
+- Use absolute imports for shared package: `@startup-stack/shared`
+- Use relative imports for same package: `./lib/logger.js`
+
+### Comments
+- Use JSDoc for public methods: `/** Description */`
+- Use `// TODO:` for temporary code
+- Use `// biome-ignore` when necessary with explanation
+
+### Type Safety
+- Use strict TypeScript settings
+- Avoid `any`, use `unknown` or proper types
+- Use type assertions sparingly, prefer type guards
+- Extend Express types in `types/express.d.ts` when needed
+
+### Error Codes
+- Use SCREAMING_SNAKE_CASE: `'NOT_FOUND'`, `'INVALID_REQUEST'`
+- Be descriptive: `'HEALTH_READINESS_CHECK_FAILED'`
+- Keep consistent naming across the codebase
+
+### Naming Conventions
+- Classes: PascalCase: `HealthController`
+- Functions/variables: camelCase: `checkHealth`, `healthRepository`
+- Types/interfaces: PascalCase: `ApiResponse`, `HealthRepository`
+- Files: kebab-case: `health-controller.ts`, `request-id.ts`
+- Constants: UPPER_SNAKE_CASE: `CONFIG`, `LOGGER`
+
+## When Generating Code
+
+1. **Controllers**: Create class implementing `Controller`, use dependency injection, follow response format
+2. **Middleware**: Export named function, handle errors properly, include requestId in logs
+3. **Repositories**: Define interface first, implement class, use async/await
+4. **API Routes**: Use typed responses, include meta with requestId and timestamp
+5. **Tests**: Mock dependencies, test both success and error cases, verify response structure
+6. **Types**: Define in shared package, use `ApiResponse` generic, export from index
+
+## Example Controller Pattern
+
+```typescript
+import type { Request, Response, Router } from 'express';
+import type { Controller } from '../../lib/controller.js';
+import type { FeatureRepository } from './feature-repository.js';
+
+export class FeatureController implements Controller {
+  public readonly router: Router;
+
+  constructor(private readonly featureRepo: FeatureRepository) {
+    this.router = Router();
+    this.router.get('/', this.getFeatures);
+  }
+
+  /**
+   * Get all features.
+   */
+  private getFeatures = async (req: Request, res: Response) => {
+    const features = await this.featureRepo.findAll();
+    return res.status(200).json<FeatureListResponse>({
+      success: true,
+      data: features,
+      meta: {
+        requestId: req.requestId,
+        timestamp: new Date().toISOString(),
+      },
+    });
+  };
+}
+```
+
+## Example Middleware Pattern
+
+```typescript
+import type { NextFunction, Request, Response } from 'express';
+import { LOGGER } from '../lib/logger.js';
+
+export function customMiddleware(req: Request, res: Response, next: NextFunction) {
+  // Middleware logic
+  next();
+}
+```
+
+## Example Repository Pattern
+
+```typescript
+export interface FeatureRepository {
+  findAll(): Promise<Feature[]>;
+}
+
+export class FeatureMemoryRepo implements FeatureRepository {
+  async findAll(): Promise<Feature[]> {
+    // Implementation
+  }
+}
+```
