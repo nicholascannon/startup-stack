@@ -10,6 +10,8 @@ startup-stack/
 │   ├── frontend/     # React + Vite application
 │   ├── server/       # Express API server
 │   └── shared/       # Shared types and schemas (Zod)
+├── .github/
+│   └── workflows/    # GitHub Actions CI/CD pipelines
 ├── docker-compose.yml
 ├── Dockerfile
 ├── fly.toml          # Fly.io deployment configuration
@@ -106,6 +108,16 @@ The Fly.io configuration:
 - Health checks via `/api/v1/health`
 - Runs on port 8080 internally
 - Forces HTTPS
+
+### CI/CD Pipelines
+
+GitHub Actions workflows are configured for:
+
+- **PR Pipeline**: Validates code (lint, build, test) on pull requests
+- **Deploy Pipeline**: Automatically deploys to Fly.io on `main` branch pushes (can also be triggered manually)
+- **Rollback Pipeline**: Manual workflow to rollback to a previous deployment
+
+Required GitHub secrets: `FLY_API_TOKEN` (required), `SENTRY_DSN` (optional)
 
 ## Server Features
 
