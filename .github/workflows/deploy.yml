@@ -1,6 +1,8 @@
 name: Deploy Pipeline
 
 on:
+  # enable manual runs of the deploy pipeline
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
