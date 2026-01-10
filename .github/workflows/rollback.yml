@@ -30,7 +30,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: |
-          CURRENT=$(flyctl releases --app startup-stack --json | jq -r '.[0].imageRef' | cut -d: -f2)
+          CURRENT=$(flyctl releases --app startup-stack --json | jq -r '.[0].ImageRef' | cut -d: -f2)
           echo "current=$CURRENT" >> $GITHUB_OUTPUT
           echo "Current release: $CURRENT"
 
@@ -42,7 +42,7 @@ jobs:
         run: |
           if [ -z "$TARGET_INPUT" ]; then
             # Get previous release from Fly.io
-            TARGET=$(flyctl releases --app startup-stack --json | jq -r '.[1].imageRef' | cut -d: -f2)
+            TARGET=$(flyctl releases --app startup-stack --json | jq -r '.[1].ImageRef' | cut -d: -f2)
           else
             TARGET="$TARGET_INPUT"
           fi
@@ -53,7 +53,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: |
-          if ! flyctl releases --app startup-stack --json | jq -r '.[].imageRef' | grep -q ":${{ steps.target.outputs.target }}"; then
+          if ! flyctl releases --app startup-stack --json | jq -r '.[].ImageRef' | grep -q ":${{ steps.target.outputs.target }}"; then
             echo "Error: Target release ${{ steps.target.outputs.target }} not found"
             exit 1
           fi
