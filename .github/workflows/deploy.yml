@@ -23,6 +23,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -74,6 +76,7 @@ jobs:
           TAG_NAME="release/${{ steps.commit.outputs.hash }}"
           if ! git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
             git tag -a "$TAG_NAME" -m "Release ${{ steps.commit.outputs.hash }}"
+            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
             git push origin "$TAG_NAME"
             echo "Created and pushed tag: $TAG_NAME"
           else
