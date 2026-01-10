@@ -1,3 +1,4 @@
+import type { NotFoundResponse, TooManyRequestsResponse } from '@startup-stack/shared';
 import cors from 'cors';
 import express, { type Request, type Response, Router } from 'express';
 import expressRateLimit, { ipKeyGenerator } from 'express-rate-limit';
@@ -58,13 +59,20 @@ export class ApiController implements Controller {
         const ip = (req.headers['cf-connecting-ip'] as string) || req.ip || 'unknown';
         return ip === 'unknown' ? ip : ipKeyGenerator(ip);
       },
-      message: {
-        error: 'Too many requests from this IP, please try again later.',
+      handler: (req, res) => {
+        return res.status(429).json<TooManyRequestsResponse>({
+          success: false,
+          error: {
+            code: 'TOO_MANY_REQUESTS' as const,
+            message: 'Too many requests from this IP, please try again later.',
+          },
+          meta: { requestId: req.requestId, timestamp: new Date().toISOString() },
+        });
       },
     });
 
   private notFoundHandler = (req: Request, res: Response) => {
-    return res.status(404).json({
+    return res.status(404).json<NotFoundResponse>({
       success: false,
       error: {
         code: 'NOT_FOUND',

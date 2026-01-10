@@ -1,3 +1,4 @@
+import type { RequestTimeoutResponse } from '@startup-stack/shared';
 import type { NextFunction, Request, Response } from 'express';
 import { LOGGER } from '../lib/logger.js';
 
@@ -12,7 +13,7 @@ export function requestTimeoutMiddleware(timeout: number) {
           timeout,
         });
 
-        res.status(408).json({
+        res.status(408).json<RequestTimeoutResponse>({
           success: false,
           error: {
             code: 'REQUEST_TIMEOUT',

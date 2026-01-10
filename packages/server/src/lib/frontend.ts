@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import type { NotFoundResponse } from '@startup-stack/shared';
 import express, { type Application, type NextFunction, type Request, type Response } from 'express';
 import { LOGGER } from './logger.js';
 
@@ -20,10 +21,10 @@ export function serveFrontend(app: Application, bundlePath: string) {
 
     // Return 404 for any file request (static middleware will handle it)
     if (req.path.includes('.')) {
-      return res.status(404).json({
+      return res.status(404).json<NotFoundResponse>({
         success: false,
         error: {
-          code: 'RESOURCE_NOT_FOUND',
+          code: 'NOT_FOUND',
           message: 'Resource not found',
           details: {
             path: req.originalUrl,

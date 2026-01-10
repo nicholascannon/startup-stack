@@ -1,3 +1,4 @@
+import type { InvalidRequestResponse } from '@startup-stack/shared';
 import type { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 
@@ -5,7 +6,7 @@ import { ZodError } from 'zod';
 export const zodErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   if (!(err instanceof ZodError)) return next(err);
 
-  return res.status(400).json({
+  return res.status(400).json<InvalidRequestResponse>({
     success: false,
     error: {
       code: 'INVALID_REQUEST',
