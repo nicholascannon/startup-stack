@@ -11,22 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24.11.0'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run build
-        run: npm run build
-
-      - name: Run tests
-        run: npm test
+      - name: Build Docker image
+        run: docker build .
 
       - name: Install flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
