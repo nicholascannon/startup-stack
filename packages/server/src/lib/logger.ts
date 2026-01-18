@@ -17,6 +17,9 @@ export const LOGGER = winston.createLogger({
           winston.format.json()
         ),
   transports: [new winston.transports.Console()],
+  defaultMeta: {
+    release: CONFIG.release,
+  },
 });
 
 export const loggingMiddleware = expressWinston.logger({
