@@ -20,6 +20,9 @@ find . -type f \
 rm -f package-lock.json
 npm install
 
+# Self-destruct before commit so it's not in repo history
+rm -- "$0"
+
 # Reset git
 rm -rf .git
 git init
@@ -42,6 +45,3 @@ echo "     - FLY_API_TOKEN"
 echo "     - SENTRY_DSN (optional)"
 echo ""
 echo "  4. Update any other external service configs (Sentry project name, etc.)"
-
-# Self-destruct
-rm -- "$0"
