@@ -14,11 +14,17 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "frontend": "npm run --workspace=@startup-stack/frontend --",
     "server": "npm run --workspace=@startup-stack/server --",
-    "shared": "npm run --workspace=@startup-stack/shared --"
+    "shared": "npm run --workspace=@startup-stack/shared --",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,css,md}": "biome check --write --no-errors-on-unmatched"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.10",
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
   },
   "engines": {
     "node": ">=24.11.0"
