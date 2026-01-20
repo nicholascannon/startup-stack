@@ -26,6 +26,7 @@ vi.mock('../config/env.js', () => ({
   },
 }));
 
+import { HealthCheckMemoryRepo } from '../api/health/repositories/health-check-memory-repo.js';
 import { createApp } from '../app.js';
 import { serveFrontend } from '../lib/frontend.js';
 
@@ -38,9 +39,7 @@ describe('createApp in production', () => {
     const app: express.Application = createApp({
       enableLogging: false,
       apiDependencies: {
-        healthRepository: {
-          checkHealth: vi.fn().mockResolvedValue(true),
-        },
+        healthRepository: new HealthCheckMemoryRepo(),
       },
     });
 
