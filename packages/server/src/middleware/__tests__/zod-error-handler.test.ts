@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: because */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ZodError } from 'zod';
+import * as z from 'zod';
 import { zodErrorHandler } from '../zod-error-handler.js';
 
 describe('zodErrorHandler middleware', () => {
@@ -20,10 +20,10 @@ describe('zodErrorHandler middleware', () => {
   });
 
   it('should handle ZodError and respond with 400 and issues', () => {
-    const zodError = new ZodError([
+    const zodError = new z.ZodError([
       {
         code: 'invalid_type',
-        received: 'number',
+        input: 123,
         path: ['foo'],
         message: 'Required',
         expected: 'string',
