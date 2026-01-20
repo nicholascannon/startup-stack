@@ -1,4 +1,4 @@
-import type { InvalidRequestResponse } from '@startup-stack/shared';
+import type { InvalidRequestResponse } from '@startup-stack/shared/api/errors';
 import type { NextFunction, Request, Response } from 'express';
 import * as z from 'zod';
 

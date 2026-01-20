@@ -2,7 +2,7 @@ import type {
   InternalServerErrorResponse,
   InvalidRequestBodyResponse,
   RequestBodyTooLargeResponse,
-} from '@startup-stack/shared';
+} from '@startup-stack/shared/api/errors';
 import type { NextFunction, Request, Response } from 'express';
 import { LOGGER } from '../lib/logger.js';
 

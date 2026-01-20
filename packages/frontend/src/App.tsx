@@ -1,4 +1,4 @@
-import type { HealthReadinessResponse } from '@startup-stack/shared';
+import type { HealthReadinessResponse } from '@startup-stack/shared/api/health';
 import { useEffect, useState } from 'react';
 
 import './App.css';

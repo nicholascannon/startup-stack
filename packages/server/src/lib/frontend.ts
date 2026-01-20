@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import type { NotFoundResponse } from '@startup-stack/shared';
+import type { NotFoundResponse } from '@startup-stack/shared/api/errors';
 import express, { type Application, type NextFunction, type Request, type Response } from 'express';
 import { LOGGER } from './logger.js';
 

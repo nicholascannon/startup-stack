@@ -1,4 +1,4 @@
-import type { NotFoundResponse, TooManyRequestsResponse } from '@startup-stack/shared';
+import type { NotFoundResponse, TooManyRequestsResponse } from '@startup-stack/shared/api/errors';
 import cors from 'cors';
 import express, { type Request, type Response, Router } from 'express';
 import expressRateLimit, { ipKeyGenerator } from 'express-rate-limit';

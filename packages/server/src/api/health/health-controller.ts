@@ -1,4 +1,4 @@
-import type { HealthLivenessResponse, HealthReadinessResponse } from '@startup-stack/shared';
+import type { HealthLivenessResponse, HealthReadinessResponse } from '@startup-stack/shared/api/health';
 import { type Request, type Response, Router } from 'express';
 import { CONFIG } from '../../config/env.js';
 import type { Controller } from '../../lib/controller.js';

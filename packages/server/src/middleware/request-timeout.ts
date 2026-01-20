@@ -1,4 +1,4 @@
-import type { RequestTimeoutResponse } from '@startup-stack/shared';
+import type { RequestTimeoutResponse } from '@startup-stack/shared/api/errors';
 import type { NextFunction, Request, Response } from 'express';
 import { LOGGER } from '../lib/logger.js';
 

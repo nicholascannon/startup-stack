@@ -1,4 +1,4 @@
-import type { ApiResponse } from './api-response.js';
+import type { ApiResponse } from '../types/api-response.js';
 
 export type HealthReadinessResponse = ApiResponse<
   {
