@@ -15,7 +15,7 @@
     "frontend": "npm run --workspace=@startup-stack/frontend --",
     "server": "npm run --workspace=@startup-stack/server --",
     "shared": "npm run --workspace=@startup-stack/shared --",
-    "prepare": "husky || true"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx,json,css,md}": "biome check --write --no-errors-on-unmatched"
