@@ -8,6 +8,7 @@ services:
     env_file:
       - ./packages/server/.env
     environment:
+      - NODE_ENV=production
       - RELEASE=local
       - PORT=8000
       - CORS_HOSTS=http://localhost:8000
