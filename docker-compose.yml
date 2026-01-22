@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - '8000:8000'
+    env_file:
+      - ./packages/server/.env
     environment:
       - RELEASE=local
       - PORT=8000
