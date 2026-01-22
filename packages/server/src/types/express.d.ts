@@ -1,5 +1,13 @@
 import type { ApiResponse } from '@startup-stack/shared';
 
+declare global {
+  namespace Express {
+    interface Request {
+      requestId: string;
+    }
+  }
+}
+
 declare module 'express' {
   // Override the json method to force the shared ApiResponse type
   interface Response {
