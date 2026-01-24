@@ -27,3 +27,12 @@ export type RequestTimeoutResponse = ApiResponse<
     method: string;
   }
 >;
+
+export type ApiError =
+  | TooManyRequestsResponse
+  | NotFoundResponse
+  | InvalidRequestBodyResponse
+  | RequestBodyTooLargeResponse
+  | InternalServerErrorResponse
+  | InvalidRequestResponse
+  | RequestTimeoutResponse;

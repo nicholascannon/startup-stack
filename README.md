@@ -2,6 +2,23 @@
 
 A full-stack TypeScript monorepo with React frontend and Express backend, production-ready with error tracking, health checks, and deployment configurations.
 
+## Table of Contents
+
+- [Structure](#structure)
+- [Prerequisites](#prerequisites)
+- [Development](#development)
+  - [Other Commands](#other-commands)
+- [Docker](#docker)
+- [Deployment](#deployment)
+  - [Fly.io](#flyio)
+  - [CI/CD Pipelines](#cicd-pipelines)
+- [Server Features](#server-features)
+  - [Middleware](#middleware)
+  - [Health Checks](#health-checks)
+  - [Production Features](#production-features)
+- [Server Configuration](#server-configuration)
+- [Tech Stack](#tech-stack)
+
 ## Structure
 
 ```
