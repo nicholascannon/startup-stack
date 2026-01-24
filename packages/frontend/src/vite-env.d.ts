@@ -5,7 +5,6 @@ type ImportMetaEnv = {
   // TODO: add environment variables
 };
 
-// biome-ignore lint/correctness/noUnusedVariables: type override
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }

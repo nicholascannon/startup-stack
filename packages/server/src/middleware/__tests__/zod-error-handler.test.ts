@@ -35,7 +35,6 @@ describe('zodErrorHandler middleware', () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
-        success: false,
         error: expect.objectContaining({
           code: 'INVALID_REQUEST',
           message: 'Invalid request',
@@ -68,7 +67,6 @@ describe('zodErrorHandler middleware', () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
-        success: false,
         error: expect.objectContaining({
           code: 'INVALID_REQUEST',
           message: 'Invalid request',

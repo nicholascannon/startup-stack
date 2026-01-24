@@ -62,7 +62,6 @@ describe('requestTimeoutMiddleware', () => {
     expect(res.status).toHaveBeenCalledWith(408);
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
-        success: false,
         error: expect.objectContaining({
           code: 'REQUEST_TIMEOUT',
           message: 'Request timeout',

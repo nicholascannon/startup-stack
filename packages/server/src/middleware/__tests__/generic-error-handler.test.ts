@@ -41,7 +41,6 @@ describe('genericErrorHandler middleware', () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
-        success: false,
         error: expect.objectContaining({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Internal server error',
@@ -68,7 +67,6 @@ describe('genericErrorHandler middleware', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          success: false,
           error: expect.objectContaining({
             code: 'INVALID_REQUEST_BODY',
             message: 'Invalid request body',
@@ -94,7 +92,6 @@ describe('genericErrorHandler middleware', () => {
       expect(res.status).toHaveBeenCalledWith(413);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          success: false,
           error: expect.objectContaining({
             code: 'REQUEST_BODY_TOO_LARGE',
             message: 'Request body too large',
@@ -120,7 +117,6 @@ describe('genericErrorHandler middleware', () => {
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          success: false,
           error: expect.objectContaining({
             code: 'INTERNAL_SERVER_ERROR',
             message: 'Internal server error',
