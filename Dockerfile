@@ -33,11 +33,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package.json package-lock.json* ./
-COPY packages/frontend/package.json ./packages/frontend/
 COPY packages/server/package.json ./packages/server/
 COPY packages/shared/package.json ./packages/shared/
 
-RUN npm ci --omit=dev --workspaces --ignore-scripts
+RUN npm ci --omit=dev --workspace=@startup-stack/server --workspace=@startup-stack/shared --ignore-scripts
 
 COPY --from=builder /app/packages/frontend/dist ./packages/frontend/dist
 COPY --from=builder /app/packages/server/dist ./packages/server/dist
