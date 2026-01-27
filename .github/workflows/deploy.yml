@@ -54,14 +54,18 @@ jobs:
       - name: Push Docker image
         run: docker push registry.fly.io/startup-stack:${{ steps.commit.outputs.hash }}
 
-      - name: Set SENTRY_DSN secret (if provided)
+      - name: Set Fly.io secrets
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
-          if [ -n "$SENTRY_DSN" ]; then
-            flyctl secrets set SENTRY_DSN="$SENTRY_DSN" --app startup-stack --stage
+          # SECRETS="DATABASE_URL=${{ secrets.DATABASE_URL }}"
+          # SECRETS="$SECRETS DATABASE_CERTIFICATE=${{ secrets.DATABASE_CERTIFICATE }}"
+          
+          if [ -n "${{ secrets.SENTRY_DSN }}" ]; then
+            SECRETS="$SECRETS SENTRY_DSN=${{ secrets.SENTRY_DSN }}"
           fi
+          
+          flyctl secrets set $SECRETS --app secrets-vault --stage
 
       - name: Deploy to Fly.io
         env:
