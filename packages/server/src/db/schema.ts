@@ -3,11 +3,13 @@ import { index, integer, pgSchema, varchar } from 'drizzle-orm/pg-core';
 export const schema = pgSchema('startup-stack');
 
 // TODO: delete this - sample table only
-export const sampleTable = schema.table('sample', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
-});
-
-export const nameIndex = index('name_index').on(sampleTable.name);
+export const sampleTable = schema.table(
+  'sample',
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    name: varchar({ length: 255 }).notNull(),
+    age: integer().notNull(),
+    email: varchar({ length: 255 }).notNull().unique(),
+  },
+  (table) => [index('name_index').on(table.name)]
+);
