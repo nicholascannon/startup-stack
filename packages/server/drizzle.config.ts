@@ -9,7 +9,9 @@ export default defineConfig({
     schema: 'migrations',
   },
   dbCredentials: {
+    // Bug with drizzle kit ignoring the sslmode parameter.
+    // https://github.com/drizzle-team/drizzle-orm/issues/4443
     // biome-ignore lint/style/noNonNullAssertion: database URL is required
-    url: `${process.env.DATABASE_URL!}?sslmode=no-verify`, // drizzle seems to have lots of issues with SSL.
+    url: `${process.env.DATABASE_URL!}?sslmode=no-verify`,
   },
 });
