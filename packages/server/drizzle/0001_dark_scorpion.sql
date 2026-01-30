@@ -1,0 +1,1 @@
+CREATE INDEX "name_index" ON "startup-stack"."sample" USING btree ("name");
