@@ -73,7 +73,7 @@ jobs:
             SECRETS="$SECRETS SENTRY_DSN=${{ secrets.SENTRY_DSN }}"
           fi
           
-          flyctl secrets set $SECRETS --app secrets-vault --stage
+          flyctl secrets set $SECRETS --app startup-stack --stage
 
       - name: Deploy to Fly.io
         env:

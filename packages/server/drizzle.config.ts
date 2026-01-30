@@ -10,6 +10,6 @@ export default defineConfig({
   },
   dbCredentials: {
     // biome-ignore lint/style/noNonNullAssertion: database URL is required
-    url: `${process.env.DATABASE_URL!}?sslmode=no-verify`,
+    url: `${process.env.DATABASE_URL!}?sslmode=no-verify`, // drizzle seems to have lots of issues with SSL.
   },
 });
