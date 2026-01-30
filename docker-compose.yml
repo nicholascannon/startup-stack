@@ -1,4 +1,18 @@
 services:
+  db:
+    image: postgres:17.6-alpine
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 1s
+      timeout: 2s
+      retries: 15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: startup-stack
+    ports:
+      - 5432:5432
+
   app:
     build:
       context: .
@@ -12,6 +26,7 @@ services:
       - RELEASE=local
       - PORT=8000
       - CORS_HOSTS=http://localhost:8000
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/startup-stack
     healthcheck:
       test:
         [
@@ -21,3 +36,22 @@ services:
       interval: 1s
       timeout: 2s
       retries: 15 
+    profiles:
+      - app
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+
+  migrations:
+    build:
+      context: .
+      dockerfile: migrations.Dockerfile
+    profiles:
+      - app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/startup-stack
