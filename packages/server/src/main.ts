@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import './lib/instrument.js'; // import first
-import { HealthCheckMemoryRepo } from './api/health/repositories/health-check-memory-repo.js';
+import { HealthCheckRepoImpl } from './api/health/repositories/health-check-repo-impl.js';
 import { createApp } from './app.js';
 import { CONFIG } from './config/env.js';
+import { createDb } from './lib/db.js';
 import { lifecycle } from './lib/lifecycle.js';
 import { LOGGER, setupProcessLogging } from './lib/logger.js';
 
@@ -20,12 +21,18 @@ LOGGER.info('CONFIG', {
       environment: CONFIG.sentry.environment,
       sampleRate: CONFIG.sentry.sampleRate,
     },
+    db: {
+      // don't log DB password
+      url: '*'.repeat(CONFIG.db.url.length),
+    },
   },
 });
 
+const { db, pool } = createDb(CONFIG);
+
 const app = createApp({
   apiDependencies: {
-    healthRepository: new HealthCheckMemoryRepo(), // TODO: Use a real repository when DB setup
+    healthRepository: new HealthCheckRepoImpl(db),
   },
 }).listen(CONFIG.port, () => {
   LOGGER.info('Server started', { port: CONFIG.port });
@@ -33,6 +40,7 @@ const app = createApp({
   lifecycle.on('close', () =>
     app.close(() => {
       LOGGER.info('Server closed');
+      pool.end().then(() => LOGGER.info('DB pool closed'));
     })
   );
 });

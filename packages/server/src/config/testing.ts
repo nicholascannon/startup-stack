@@ -22,6 +22,10 @@ export const TEST_CONFIG: Config = {
     environment: 'local',
     sampleRate: 1.0,
   },
+  db: {
+    url: 'postgresql://test:test@localhost:5432/test',
+    certificate: undefined,
+  },
 };
 
 vi.mock('../config/env.js', () => ({

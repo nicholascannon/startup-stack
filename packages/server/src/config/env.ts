@@ -27,6 +27,13 @@ export const CONFIG = z
         .default('1.0')
         .transform((val) => (val ? Number.parseFloat(val) : undefined)),
     }),
+    db: z.object({
+      url: z.string(),
+      certificate: z
+        .string()
+        .optional()
+        .transform((val) => (val ? Buffer.from(val, 'base64').toString('utf-8') : undefined)),
+    }),
   })
   .parse({
     env: process.env.NODE_ENV,
@@ -44,6 +51,10 @@ export const CONFIG = z
       dsn: process.env.SENTRY_DSN,
       environment: process.env.SENTRY_ENVIRONMENT,
       sampleRate: process.env.SENTRY_SAMPLE_RATE,
+    },
+    db: {
+      url: process.env.DATABASE_URL,
+      certificate: process.env.DATABASE_CERTIFICATE,
     },
   });
 
