@@ -37,7 +37,15 @@ jobs:
 
       - name: Check migrations are up to date
         working-directory: packages/server
-        run: npx drizzle-kit check
+        run: |
+          npx drizzle-kit generate --name ci-check
+          if git diff --exit-code ./drizzle; then
+            echo "✓ Schema and migrations are in sync"
+          else
+            echo "✗ Schema changes detected without committed migration!"
+            echo "Run 'npm run db:generate' locally and commit the migration files."
+            exit 1
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
