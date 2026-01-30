@@ -1,4 +1,4 @@
-import { integer, pgSchema, varchar } from 'drizzle-orm/pg-core';
+import { index, integer, pgSchema, varchar } from 'drizzle-orm/pg-core';
 
 export const schema = pgSchema('startup-stack');
 
@@ -9,3 +9,5 @@ export const sampleTable = schema.table('sample', {
   age: integer().notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
 });
+
+export const nameIndex = index('name_index').on(sampleTable.name);
