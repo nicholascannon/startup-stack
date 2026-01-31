@@ -14,4 +14,5 @@ export default defineConfig({
     // biome-ignore lint/style/noNonNullAssertion: database URL is required
     url: `${process.env.DATABASE_URL!}?sslmode=no-verify`,
   },
+  strict: true,
 });
