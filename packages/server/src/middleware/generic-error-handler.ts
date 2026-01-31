@@ -6,16 +6,10 @@ import type {
 import type { NextFunction, Request, Response } from 'express';
 import { LOGGER } from '../lib/logger.js';
 
-// biome-ignore lint/suspicious/noExplicitAny: required to match express error handler type
-export const genericErrorHandler = (error: any, req: Request, res: Response, _next: NextFunction) => {
-  if (typeof error === 'object') {
-    error.requestId = req.requestId;
-    LOGGER.error('Error', error);
-  } else {
-    LOGGER.error('Error', { error, requestId: req.requestId });
-  }
+export const genericErrorHandler = (error: unknown, req: Request, res: Response, _next: NextFunction) => {
+  LOGGER.error('Error', { error, requestId: req.requestId });
 
-  if ('type' in error && error.type === 'entity.parse.failed') {
+  if (typeof error === 'object' && error !== null && 'type' in error && error.type === 'entity.parse.failed') {
     return res.status(400).json<InvalidRequestBodyResponse>({
       error: {
         code: 'INVALID_REQUEST_BODY',
@@ -24,7 +18,7 @@ export const genericErrorHandler = (error: any, req: Request, res: Response, _ne
       meta: { requestId: req.requestId, timestamp: new Date().toISOString() },
     });
   }
-  if ('type' in error && error.type === 'entity.too.large') {
+  if (typeof error === 'object' && error !== null && 'type' in error && error.type === 'entity.too.large') {
     return res.status(413).json<RequestBodyTooLargeResponse>({
       error: {
         code: 'REQUEST_BODY_TOO_LARGE',
