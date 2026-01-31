@@ -33,6 +33,18 @@ export const CONFIG = z
         .string()
         .optional()
         .transform((val) => (val ? Buffer.from(val, 'base64').toString('utf-8') : undefined)),
+      poolMax: z
+        .string()
+        .optional()
+        .transform((v) => (v ? Number(v) : undefined))
+        .pipe(z.number().int().min(1).max(50).optional())
+        .default(10),
+      poolMin: z
+        .string()
+        .optional()
+        .transform((v) => (v ? Number(v) : undefined))
+        .pipe(z.number().int().min(0).max(10).optional())
+        .default(2),
     }),
   })
   .parse({
@@ -55,6 +67,8 @@ export const CONFIG = z
     db: {
       url: process.env.DATABASE_URL,
       certificate: process.env.DATABASE_CERTIFICATE,
+      poolMax: process.env.DATABASE_POOL_MAX,
+      poolMin: process.env.DATABASE_POOL_MIN,
     },
   });
 

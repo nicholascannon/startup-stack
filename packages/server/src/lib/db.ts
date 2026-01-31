@@ -10,8 +10,8 @@ export function createDb(config: Config): {
   const pool = new Pool({
     application_name: 'startup-stack',
     connectionString: config.db.url,
-    max: 10,
-    min: 5,
+    max: config.db.poolMax,
+    min: config.db.poolMin,
     idleTimeoutMillis: 30_000,
     connectionTimeoutMillis: 5_000,
     allowExitOnIdle: true,

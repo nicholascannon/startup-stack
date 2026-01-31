@@ -25,6 +25,8 @@ export const TEST_CONFIG: Config = {
   db: {
     url: 'postgresql://test:test@localhost:5432/test',
     certificate: undefined,
+    poolMax: 10,
+    poolMin: 2,
   },
 };
 

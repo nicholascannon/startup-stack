@@ -24,6 +24,8 @@ LOGGER.info('CONFIG', {
     db: {
       // don't log DB password
       url: '*'.repeat(CONFIG.db.url.length),
+      poolMax: CONFIG.db.poolMax,
+      poolMin: CONFIG.db.poolMin,
     },
   },
 });
